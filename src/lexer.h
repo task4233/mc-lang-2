@@ -32,6 +32,16 @@ class Lexer {
             // なくなるまで読み込み、その値をidentifierStrにセットする。
             // 読み込んだ文字が"def"だった場合は関数定義であるためtok_defをreturnし、
             // そうでなければ引数の参照か関数呼び出しであるためtok_identifierをreturnする。
+	    std::string identifierStr = "";
+	    while ('a' < lastChar && lastChar < 'z') {
+	      identifierStr += lastChar;
+	      lastChar = getNextChar(iFile);
+	    }
+
+	    // function definition
+	    if (identifierStr == "def") {
+	      return tok_def;
+	    }
 
             // TODO 1.3: 数字のパーシングを実装してみよう
             // 今読んでいる文字(lastChar)が数字だった場合(isdigit(lastChar) == true)は、
