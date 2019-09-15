@@ -35,6 +35,7 @@ class Lexer {
 	    std::string identifierStr = "";
 	    while ('a' < lastChar && lastChar < 'z') {
 	      identifierStr += lastChar;
+	      lastChar = getNextChar(iFile);
 	    }
 
 	    // function definition
