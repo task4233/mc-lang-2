@@ -198,6 +198,10 @@ static std::unique_ptr<ExprAST> ParseIdentifierExpr() {
     }
     if (CurTok == ')') break;
     args.emplace_back(std::move(parsedToken));
+    // ignore ','
+    if (CurTok == ',') {
+      getNextToken();
+    }
   }
   
   // 6. トークンを次に進める。
