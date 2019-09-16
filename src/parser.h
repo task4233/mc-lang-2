@@ -272,7 +272,34 @@ static std::unique_ptr<PrototypeAST> ParsePrototype() {
   // 2.2とほぼ同じ。CallExprASTではなくPrototypeASTを返し、
   // 引数同士の区切りが','ではなくgetNextToken()を呼ぶと直ぐに
   // CurTokに次の引数(もしくは')')が入るという違いのみ。
-  return nullptr;
+  std::string functionNameStr = lexer.getIdentifier();
+  
+  int token = getNextToken();
+
+  // invlid expression
+  if (token != '(') {
+    return nullptr;
+  }
+
+  // get args
+  std::vector<std::string> args;
+  while (getNextToken()) {
+    if (CurTok == ')') break;
+
+    args.emplace_back(lexer.getIdentifier());
+
+    // ignore ','
+    if (token == ',') {
+      getNextToken();
+    } 
+  }
+  
+  // 6. トークンを次に進める。
+  token = getNextToken();
+
+  // 7. PrototypeASTを構成し、返す。
+  return llvm::make_unique<PrototypeAST>(functionNameStr, args);
+
 }
 
 static std::unique_ptr<FunctionAST> ParseDefinition() {
