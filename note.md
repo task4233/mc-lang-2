@@ -10,3 +10,6 @@
  - To make unique_ptr of new instance, use `llvm::make_unique< Hoge >(fuga)`
  - unique_ptr is smart pointer, which has a ownership to access and release the memory.
 
+## 2-3
+ - use getIdentifier to get identifier
+ 
