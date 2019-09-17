@@ -101,7 +101,7 @@ Value *BinaryAST::codegen() {
   case '<=':
     return Builder.CreateICmpUGE(L, R, "cmpUGE");
   case '>=':
-    return Builder.CreateIcmpULE(L, R, "cmpULE");
+    return Builder.CreateICmpULE(L, R, "cmpULE");
   case '<':
     return Builder.CreateICmpUGT(L, R, "cmpUGT");
   case '>':
