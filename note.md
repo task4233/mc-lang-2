@@ -23,4 +23,7 @@
 ## 2-5
  - fixed bugs in 2-2
    - it's caused `break;` before `emplace_back`
+
+## 2-6
+ - write the code in ./src/main.cppto call the function made by mc-lang
  
