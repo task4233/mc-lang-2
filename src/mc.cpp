@@ -64,12 +64,14 @@ int main(int argc, char *argv[]) {
 
     // 二項演算子の定義
     // 数字が低いほど結合度が低い
-    BinopPrecedence['+'] = 20;
-    BinopPrecedence['-'] = 20;
-    BinopPrecedence['*'] = 40;
-    BinopPrecedence['/'] = 40;
-    BinopPrecedence['<'] = 5;
-    BinopPrecedence['>'] = 5;
+    BinopPrecedence['+']  = 20;
+    BinopPrecedence['-']  = 20;
+    BinopPrecedence['*']  = 40;
+    BinopPrecedence['/']  = 40;
+    BinopPrecedence['<='] = 5;
+    BinopPrecedence['>='] = 5
+    BinopPrecedence['<']  = 5;
+    BinopPrecedence['>']  = 5;
 
     getNextToken();
 
