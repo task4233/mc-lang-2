@@ -86,7 +86,7 @@ Value *BinaryAST::codegen() {
     // if target has no child, it will be returned nullptr after dynamic_cast
     
     // LHSE = LHS Expression
-    VariableExprAST* LHSE = dynamic_cast< VariableExprAST* >(LHS.get());
+    VariableExprAST* LHSE = static_cast< VariableExprAST* >(LHS.get());
     if (LHSE == nullptr) {
       return LogErrorV("destination of '=' must be a variable.");
     }
@@ -100,13 +100,16 @@ Value *BinaryAST::codegen() {
     // static std::map<std::string, Value *> NamedValues;
     Value* variable = nullptr;
     if (NamedValues.count(LHSE->getName())) {
-      Variable = NamedValues[LHSE->getName()];
+      variable = NamedValues[LHSE->getName()];
     }
     if (variable == nullptr) {
-      return LogErrorV(LHSE->getName + "does not exist.");
+      return LogErrorV(LHSE->getName() + "does not exist.");
     }
 
-    Builder.CreateStore(val);
+
+    // store val <- variable
+    Builder.CreateStore(val, variable);
+    return val;
   }
   
   // 二項演算子の両方の引数をllvm::Valueにする。
@@ -134,13 +137,9 @@ Value *BinaryAST::codegen() {
     std::cout << (R->getType())->getTypeID() << std::endl;
     */
     return Builder.CreateUDiv(L, R, "divtmp");
-  case '<=':
-    return Builder.CreateICmpUGE(L, R, "cmpUGE");
-  case '>=':
-    return Builder.CreateICmpULE(L, R, "cmpULE");
-  case '<':
-    return Builder.CreateICmpUGT(L, R, "cmpUGT");
   case '>':
+    return Builder.CreateICmpUGT(L, R, "cmpUGT");
+  case '<':
     return Builder.CreateICmpULT(L, R, "cmpULT");
   default:
     return LogErrorV("invalid binary operator");
