@@ -89,6 +89,8 @@ Value *BinaryAST::codegen() {
     return Builder.CreateSub(L, R, "subtmp");
   case '*':
     return Builder.CreateMul(L, R, "multmp");
+  case '/':
+    return Builder.CreateUDiv(L, R, "divtmp");
   default:
     return LogErrorV("invalid binary operator");
   }
