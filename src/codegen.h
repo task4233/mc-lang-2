@@ -31,15 +31,12 @@ Value *LogErrorV(const char *str) {
 
 // TODO 2.4: 引数のcodegenを実装してみよう
 Value *VariableExprAST::codegen() {
-    // NamedValuesの中にVariableExprAST::NameとマッチするValueがあるかチェックし、
-    // あったらそのValueを返す。
-  for(auto&& namedValue : NamedValues) {
-    // namedValue
-    // first: variable name(std::string)
-    // second: value(llvm::Value)
-    if (VariableExprAST::variableName == namedValue.first) {
-      return namedValue.second;
-    }
+  // NamedValuesの中にVariableExprAST::NameとマッチするValueがあるかチェックし、
+  // あったらそのValueを返す。
+  // namedValue
+  // static std::map<std::string, Value *> NamedValues;
+  if (NamedValues.count(VariableExprAST::variableName)) {
+    return NamedValues[VariableExprAST::variableName];
   }
   return nullptr;
 }
@@ -54,15 +51,15 @@ Value *CallExprAST::codegen() {
   // https://llvm.org/doxygen/classllvm_1_1Module.html
   // Function * Module::getFunction(StringRef Name) const
   // look up the specified function in the module symbol table
-  auto calleefuncPtr = myModule->getFunction(CallExprAST::callee);
-  if (calleefuncPtr == nullptr) {
+  auto calleeFuncPtr = myModule->getFunction(CallExprAST::callee);
+  if (calleeFuncPtr == nullptr) {
     return nullptr;
   }
     // 2. llvm::Function::arg_sizeと実際に渡されたargsのサイズを比べ、
     // サイズが間違っていたらエラーを出力。
 
-  if (calleefuncPtr->arg_size() != args.size()) {
-    return LogErrorV("Wrong args size\n");
+  if (calleeFuncPtr->arg_size() != args.size()) {
+    return LogErrorV(("Wrong args size: expected:" + std::to_string(calleeFuncPtr->arg_size()) + ", out:" + std::to_string(args.size())).c_str());
   }
   return nullptr;
 
@@ -73,7 +70,7 @@ Value *CallExprAST::codegen() {
       argsV.emplace_back(argV);
     }
     // 4. IRBuilderのCreateCallを呼び出し、Valueをreturnする。
-    return Builder.CreateCall(calleefuncPtr, argsV);
+    return Builder.CreateCall(calleeFuncPtr, argsV);
 }
 
 Value *BinaryAST::codegen() {
