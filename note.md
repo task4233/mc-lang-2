@@ -12,4 +12,12 @@
 
 ## 2-3
  - use getIdentifier to get identifier
+
+## 2-4
+ - VariableExprAST::variableName is static
+ - static std::map<std::string, llvm::Value* > NamedValues
+ - namedValue()
+   - first: variable name(std::string)
+   - second: value(llvm::Value)
+
  
