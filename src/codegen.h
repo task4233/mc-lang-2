@@ -65,7 +65,11 @@ Value *CallExprAST::codegen() {
 
   std::vector<Value *> argsV;
   // 3. argsをそれぞれcodegenしllvm::Valueにし、argsVにpush_backする。
-  for (auto&& arg: args) {    
+  for (auto&& arg: args) {
+    Value* argV = arg->codegen();
+    if (argV == nullptr) {
+      return LogErrorV("codegen is failed(CallExprAST).");
+    }
     argsV.emplace_back(arg->codegen());
   }
   // 4. IRBuilderのCreateCallを呼び出し、Valueをreturnする。
@@ -90,7 +94,7 @@ Value *BinaryAST::codegen() {
     // codegen the RHS
     Value* val = RHS->codegen();
     if (val == nullptr) {
-      return LogErrorV("codegen is failed.");
+      return LogErrorV("codegen is failed(VariableExpr).");
     }
 
     // static std::map<std::string, Value *> NamedValues;
