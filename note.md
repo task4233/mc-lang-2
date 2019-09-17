@@ -26,4 +26,6 @@
 
 ## 2-6
  - write the code in ./src/main.cppto call the function made by mc-lang
- 
+
+## implement-udiv
+ - add '/' to codegen.h & mc.cpp
