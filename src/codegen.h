@@ -77,40 +77,6 @@ Value *CallExprAST::codegen() {
 }
 
 Value *BinaryAST::codegen() {
-  // prioritize '=' operator for LHS as ansexpression
-  // in case of '(Op)=' such as <=, >=, +=
-  if (Op == '=') {
-    // ref:
-    // https://www.yunabe.jp/docs/cpp_casts.html
-    // dynamic cast is used to cast the pointer(parent class -> child class)
-    // if target has no child, it will be returned nullptr after dynamic_cast
-    
-    // LHSE = LHS Expression
-    VariableExprAST* LHSE = static_cast< VariableExprAST* >(LHS.get());
-    if (LHSE == nullptr) {
-      return LogErrorV("destination of '=' must be a variable.");
-    }
-    
-    // codegen the RHS
-    Value* val = RHS->codegen();
-    if (val == nullptr) {
-      return LogErrorV("codegen is failed(VariableExpr).");
-    }
-
-    // static std::map<std::string, Value *> NamedValues;
-    Value* variable = nullptr;
-    if (NamedValues.count(LHSE->getName())) {
-      variable = NamedValues[LHSE->getName()];
-    }
-    if (variable == nullptr) {
-      return LogErrorV(LHSE->getName() + "does not exist.");
-    }
-
-
-    // store val <- variable
-    Builder.CreateStore(val, variable);
-    return val;
-  }
   
   // 二項演算子の両方の引数をllvm::Valueにする。
   Value *L = LHS->codegen();
