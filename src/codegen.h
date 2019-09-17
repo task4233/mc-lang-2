@@ -98,6 +98,10 @@ Value *BinaryAST::codegen() {
     std::cout << (R->getType())->getTypeID() << std::endl;
     */
     return Builder.CreateUDiv(L, R, "divtmp");
+  case '<':
+    return Builder.CreateICmpUGT(L, R, "cmpUGT");
+  case '>':
+    return Builder.CreateICmpULT(L, R, "cmpULT");
   default:
     return LogErrorV("invalid binary operator");
   }
