@@ -46,10 +46,21 @@ Value *VariableExprAST::codegen() {
 
 // TODO 2.5: 関数呼び出しのcodegenを実装してみよう
 Value *CallExprAST::codegen() {
-    return nullptr;
     // 1. myModule->getFunctionを用いてcalleeがdefineされているかを
     // チェックし、されていればそのポインタを得る。
+  
+  // std::unique_ptr <Module> myModule
+  // ref:
+  // https://llvm.org/doxygen/classllvm_1_1Module.html
+  // Function * Module::getFunction(StringRef Name) const
+  // look up the specified function in the module symbol table
+  auto funcPtr = myModule->getFunction(CallExprAST::callee);
+  if (funcPtr == nullptr) {
+    return nullptr;
+  }
 
+  return nullptr;
+  
     // 2. llvm::Function::arg_sizeと実際に渡されたargsのサイズを比べ、
     // サイズが間違っていたらエラーを出力。
 
