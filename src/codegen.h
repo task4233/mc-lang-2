@@ -90,6 +90,13 @@ Value *BinaryAST::codegen() {
   case '*':
     return Builder.CreateMul(L, R, "multmp");
   case '/':
+    // ref
+    // https://llvm.org/doxygen/Value_8h_source.html#l00245
+
+    /*
+    std::cout << (L->getType())->getTypeID() << std::endl;
+    std::cout << (R->getType())->getTypeID() << std::endl;
+    */
     return Builder.CreateUDiv(L, R, "divtmp");
   default:
     return LogErrorV("invalid binary operator");
