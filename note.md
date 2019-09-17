@@ -20,4 +20,7 @@
    - first: variable name(std::string)
    - second: value(llvm::Value)
 
+## 2-5
+ - fixed bugs in 2-2
+   - it's caused `break;` before `emplace_back`
  
