@@ -98,6 +98,10 @@ Value *BinaryAST::codegen() {
     std::cout << (R->getType())->getTypeID() << std::endl;
     */
     return Builder.CreateUDiv(L, R, "divtmp");
+  case '<=':
+    return Builder.CreateICmpUGE(L, R, "cmpUGE");
+  case '>=':
+    return Builder.CreateIcmpULE(L, R, "cmpULE");
   case '<':
     return Builder.CreateICmpUGT(L, R, "cmpUGT");
   case '>':
