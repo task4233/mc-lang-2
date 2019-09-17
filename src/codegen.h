@@ -77,6 +77,35 @@ Value *CallExprAST::codegen() {
 }
 
 Value *BinaryAST::codegen() {
+
+  if (Op == '=') {
+    // if target has no child, it will be returned nullptr after dynamic_cast
+     
+    // LHSE = LHS Expression
+    VariableExprAST* LHSE = dynamic_cast< VariableExprAST* >(LHS.get());
+    if (LHSE == nullptr) {
+      return LogErrorV("destination of '=' must be a variable.");
+    }
+    Value* val = RHS->codegen();
+    if (val == nullptr) {
+      return nullptr;
+    }
+    
+    // static std::map<std::string, Value *> NamedValues;
+    Value* variable = nullptr;
+    if (NamedValues.count(LHSE->getName())) {
+
+      variable = NamedValues[LHSE->getName()];
+    }
+    if (variable == nullptr) {
+      return LogErrorV((LHSE->getName() + "does not exist.").c_str());
+    }
+
+    // store val <- variable
+    Builder.CreateStore(val, variable);
+    return val;
+  }
+
   
   // 二項演算子の両方の引数をllvm::Valueにする。
   Value *L = LHS->codegen();
