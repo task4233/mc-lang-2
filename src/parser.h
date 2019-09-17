@@ -196,8 +196,8 @@ static std::unique_ptr<ExprAST> ParseIdentifierExpr() {
     if (parsedToken == nullptr) {
       return nullptr;
     }
-    if (CurTok == ')') break;
     args.emplace_back(std::move(parsedToken));
+    if (CurTok == ')') break;
     // ignore ','
     if (CurTok == ',') {
       getNextToken();
@@ -286,19 +286,16 @@ static std::unique_ptr<PrototypeAST> ParsePrototype() {
   while (getNextToken()) {
     if (CurTok == ')') break;
 
+    if (CurTok != tok_identifier)
+      return nullptr;
     args.emplace_back(lexer.getIdentifier());
-
-    // ignore ','
-    if (token == ',') {
-      getNextToken();
-    } 
   }
   
   // 6. トークンを次に進める。
   token = getNextToken();
 
   // 7. PrototypeASTを構成し、返す。
-  return llvm::make_unique<PrototypeAST>(functionNameStr, args);
+  return llvm::make_unique<PrototypeAST>(functionNameStr, std::move(args));
 
 }
 
