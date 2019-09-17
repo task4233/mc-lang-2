@@ -58,11 +58,14 @@ Value *CallExprAST::codegen() {
   if (funcPtr == nullptr) {
     return nullptr;
   }
-
-  return nullptr;
   
     // 2. llvm::Function::arg_sizeと実際に渡されたargsのサイズを比べ、
     // サイズが間違っていたらエラーを出力。
+
+  if (funcPtr->arg_size() != args.size()) {
+    return LogErrorV("Wrong args size\n");
+  }
+  return nullptr;
 
     std::vector<Value *> argsV;
     // 3. argsをそれぞれcodegenしllvm::Valueにし、argsVにpush_backする。
