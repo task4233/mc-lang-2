@@ -1,0 +1,10 @@
+Error: Wrong args size
+
+
+define i64 @foobar(i64 %x, i64 %y, i64 %c) {
+entry:
+  %addtmp = add i64 %x, %y
+  %subtmp = sub i64 %addtmp, %c
+  ret i64 %subtmp
+}
+Wrote output.o

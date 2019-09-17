@@ -54,15 +54,14 @@ Value *CallExprAST::codegen() {
   // https://llvm.org/doxygen/classllvm_1_1Module.html
   // Function * Module::getFunction(StringRef Name) const
   // look up the specified function in the module symbol table
-  auto funcPtr = myModule->getFunction(CallExprAST::callee);
-  if (funcPtr == nullptr) {
+  auto calleefuncPtr = myModule->getFunction(CallExprAST::callee);
+  if (calleefuncPtr == nullptr) {
     return nullptr;
   }
-  
     // 2. llvm::Function::arg_sizeと実際に渡されたargsのサイズを比べ、
     // サイズが間違っていたらエラーを出力。
 
-  if (funcPtr->arg_size() != args.size()) {
+  if (calleefuncPtr->arg_size() != args.size()) {
     return LogErrorV("Wrong args size\n");
   }
   return nullptr;
@@ -73,9 +72,8 @@ Value *CallExprAST::codegen() {
       Value *argV = arg->codegen();
       argsV.emplace_back(argV);
     }
-    
-
     // 4. IRBuilderのCreateCallを呼び出し、Valueをreturnする。
+    return Builder.CreateCall(calleefuncPtr, argsV);
 }
 
 Value *BinaryAST::codegen() {
