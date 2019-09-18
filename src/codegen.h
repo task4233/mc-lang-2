@@ -100,17 +100,23 @@ Value *BinaryAST::codegen() {
     */
     return Builder.CreateUDiv(L, R, "divtmp");
   case '<':
+    Builder.CreateICmpUGT(L, R, "ugttmp");
+    /*
     return Builder.CreateIntCast(
 				 Builder.CreateICmpUGT(L, R, "ugttmp"),
 				 Type::getInt64Ty(Context),
 				 true,
 				 "cast_i1_to_i64");
+    */
   case '>':
+    return Builder.CreateICmpULT(L, R, "ugttmp");
+    /*
     return Builder.CreateIntCast(
 				 Builder.CreateICmpULT(L, R, "ugttmp"),
 				 Type::getInt64Ty(Context),
 				 true,
 				 "cast_i1_to_i64");
+    */
   default:
     return LogErrorV("invalid binary operator");
   }
