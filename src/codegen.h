@@ -51,7 +51,8 @@ Value *CallExprAST::codegen() {
   // https://llvm.org/doxygen/classllvm_1_1Module.html
   // Function * Module::getFunction(StringRef Name) const
   // look up the specified function in the module symbol table
-  auto calleeFuncPtr = myModule->getFunction(CallExprAST::callee);
+  // std::cout << callee << std::endl;
+  auto calleeFuncPtr = myModule->getFunction(callee);
   if (calleeFuncPtr == nullptr) {
     return LogErrorV("NullPtr in CallExprAST codegen\n");
   }
@@ -99,9 +100,23 @@ Value *BinaryAST::codegen() {
     */
     return Builder.CreateUDiv(L, R, "divtmp");
   case '<':
-    return Builder.CreateICmpUGT(L, R, "cmpUGT");
+    Builder.CreateICmpUGT(L, R, "ugttmp");
+    /*
+    return Builder.CreateIntCast(
+				 Builder.CreateICmpUGT(L, R, "ugttmp"),
+				 Type::getInt64Ty(Context),
+				 true,
+				 "cast_i1_to_i64");
+    */
   case '>':
-    return Builder.CreateICmpULT(L, R, "cmpULT");
+    return Builder.CreateICmpULT(L, R, "ugttmp");
+    /*
+    return Builder.CreateIntCast(
+				 Builder.CreateICmpULT(L, R, "ugttmp"),
+				 Type::getInt64Ty(Context),
+				 true,
+				 "cast_i1_to_i64");
+    */
   default:
     return LogErrorV("invalid binary operator");
   }
