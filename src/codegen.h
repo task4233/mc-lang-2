@@ -51,7 +51,8 @@ Value *CallExprAST::codegen() {
   // https://llvm.org/doxygen/classllvm_1_1Module.html
   // Function * Module::getFunction(StringRef Name) const
   // look up the specified function in the module symbol table
-  auto calleeFuncPtr = myModule->getFunction(CallExprAST::callee);
+  // std::cout << callee << std::endl;
+  auto calleeFuncPtr = myModule->getFunction(callee);
   if (calleeFuncPtr == nullptr) {
     return LogErrorV("NullPtr in CallExprAST codegen\n");
   }
