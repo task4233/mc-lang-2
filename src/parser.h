@@ -195,7 +195,7 @@ static std::unique_ptr<ExprAST> ParseIdentifierExpr() {
   
   while (auto parsedToken = ParseExpression()) {
     if (parsedToken == nullptr) {
-      return nullptr;
+      return LogError("ParseIdentifierExpr in ParseExpression is nullptr");
     }
     args.emplace_back(std::move(parsedToken));
     if (CurTok == ')') break;
@@ -266,6 +266,7 @@ static std::unique_ptr<ExprAST> ParseBinOpRHS(int CallerPrec,
     // LHS, RHSをBinaryASTにしてLHSに代入する。
     LHS = llvm::make_unique<BinaryAST>(BinOp, std::move(LHS), std::move(RHS));
   }
+  return LHS;
 }
 
 // TODO 2.3: 関数のシグネチャをパースしよう
