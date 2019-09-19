@@ -62,14 +62,19 @@ int main(int argc, char *argv[]) {
     std::string fileName = argv[1];
     lexer.initStream(fileName);
 
+    // ref
+    // https://ja.cppreference.com/w/cpp/language/operator_precedence
     // 二項演算子の定義
     // 数字が低いほど結合度が低い
-    BinopPrecedence['+'] = 20;
-    BinopPrecedence['-'] = 20;
-    BinopPrecedence['*'] = 40;
-    BinopPrecedence['/'] = 40;
-    BinopPrecedence['<'] = 5;
-    BinopPrecedence['>'] = 5;
+    BinopPrecedence['=']  = 5;
+    BinopPrecedence[ge]   = 40; // >=
+    BinopPrecedence[le]   = 40; // <=
+    BinopPrecedence['<']  = 40;
+    BinopPrecedence['>']  = 40;
+    BinopPrecedence['+']  = 50;
+    BinopPrecedence['-']  = 50;
+    BinopPrecedence['*']  = 55;
+    BinopPrecedence['/']  = 55;
 
     getNextToken();
 

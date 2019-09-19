@@ -46,6 +46,7 @@ namespace {
   public:
   VariableExprAST(const std::string &variableName) : variableName(variableName) {}
     Value *codegen() override;
+    const std::string &getName() const { return variableName; }
   };
 
   // CallExprAST - 関数呼び出しを表すクラス
@@ -102,7 +103,12 @@ static int CurTok;
 static int getNextToken() { return CurTok = lexer.gettok(); }
 
 // 二項演算子の結合子をmc.cppで定義している。
-static std::map<char, int> BinopPrecedence;
+static std::map<int, int> BinopPrecedence;
+enum OperatorEnum {
+  ge,
+  le
+};
+
 
 // GetTokPrecedence - 二項演算子の結合度を取得
 // もし現在のトークンが二項演算子ならその結合度を返し、そうでないなら-1を返す。
@@ -247,6 +253,21 @@ static std::unique_ptr<ExprAST> ParseBinOpRHS(int CallerPrec,
     // 4. 次のトークン(二項演算子の右のexpression)に進む。
     getNextToken();
 
+    // for <= & >=
+    if (CurTok == '=') {
+      getNextToken();
+      switch(BinOp) {
+      case '<':
+	BinOp = static_cast<int>(OperatorEnum::le);
+	break;
+      case '>':
+	BinOp = static_cast<int>(OperatorEnum::ge);
+	break;
+      default:
+	return LogError(("Unknown Operator" + std::to_string(BinOp) + "=").c_str());
+      }
+    }
+    
     // 5. 二項演算子の右のexpressionをパースする。 e.g. auto RHS = ParsePrimary();
     auto RHS = ParsePrimary();
     if (!RHS)
