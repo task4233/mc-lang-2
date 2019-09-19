@@ -29,3 +29,15 @@
 
 ## implement-udiv
  - add '/' to codegen.h & mc.cpp
+
+## implement ult and ugt
+ - add Builder.CreateICmpUGT(L, R, "ugttmp");
+ - add Builder.CreateICmpULT(L, R, "ulttmp");
+ - update BinopPrecedence
+ 
+## implement cast
+ - add Builder.CreateIntCast<L, Type::getInt64Ty(Context), true, "cast_i1_to_i64") to cast
+
+## implement ule and uge
+ - update the difinition of BinopPrecedence
+   - std::map< char, int > -> 

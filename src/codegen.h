@@ -134,7 +134,7 @@ Value *BinaryAST::codegen() {
     */
     return Builder.CreateUDiv(L, R, "divtmp");
   case '<':
-    Builder.CreateICmpUGT(L, R, "ugttmp");
+    return Builder.CreateICmpUGT(L, R, "ugttmp");
     /*
     return Builder.CreateIntCast(
 				 Builder.CreateICmpUGT(L, R, "ugttmp"),
