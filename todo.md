@@ -4,3 +4,5 @@
  - [x] add enum in mc.cpp
  - [x] add checking whether Curtok is '=' before calling ParsePrimary() in ParseBinOpRHS() in parser.h
    - [x] if CurTok is '=', call getNextToken() and ParsePrimary()
+ - [x] add IR order in codegen.h
+ - [ ] check it's implemented correctly

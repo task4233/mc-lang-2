@@ -133,6 +133,10 @@ Value *BinaryAST::codegen() {
     std::cout << (R->getType())->getTypeID() << std::endl;
     */
     return Builder.CreateUDiv(L, R, "divtmp");
+  case ge:
+    return Builder.CreateICmpUGE(L, R, "ugetmp");
+  case le:
+    return Builder.CreateICmpULE(L, R, "uletmp");
   case '<':
     return Builder.CreateICmpUGT(L, R, "ugttmp");
     /*
