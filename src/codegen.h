@@ -51,7 +51,7 @@ Value *CallExprAST::codegen() {
   // https://llvm.org/doxygen/classllvm_1_1Module.html
   // Function * Module::getFunction(StringRef Name) const
   // look up the specified function in the module symbol table
-  auto calleeFuncPtr = myModule->getFunction(CallExprAST::callee);
+  auto calleeFuncPtr = myModule->getFunction(callee);
   if (calleeFuncPtr == nullptr) {
     return LogErrorV("NullPtr in CallExprAST codegen\n");
   }
@@ -66,6 +66,10 @@ Value *CallExprAST::codegen() {
   std::vector<Value *> argsV;
   // 3. argsをそれぞれcodegenしllvm::Valueにし、argsVにpush_backする。
   for (auto&& arg: args) {
+    Value* argV = arg->codegen();
+    if (argV == nullptr) {
+      return LogErrorV("codegen is failed(CallExprAST).");
+    }
     argsV.emplace_back(arg->codegen());
   }
   // 4. IRBuilderのCreateCallを呼び出し、Valueをreturnする。
@@ -73,6 +77,36 @@ Value *CallExprAST::codegen() {
 }
 
 Value *BinaryAST::codegen() {
+
+  if (Op == '=') {
+    // if target has no child, it will be returned nullptr after dynamic_cast
+     
+    // LHSE = LHS Expression
+    VariableExprAST* LHSE = dynamic_cast< VariableExprAST* >(LHS.get());
+    if (LHSE == nullptr) {
+      return LogErrorV("destination of '=' must be a variable.");
+    }
+    Value* val = RHS->codegen();
+    if (val == nullptr) {
+      return nullptr;
+    }
+    
+    // static std::map<std::string, Value *> NamedValues;
+    Value* variable = nullptr;
+    if (NamedValues.count(LHSE->getName())) {
+
+      variable = NamedValues[LHSE->getName()];
+    }
+    if (variable == nullptr) {
+      return LogErrorV((LHSE->getName() + "does not exist.").c_str());
+    }
+
+    // store val <- variable
+    Builder.CreateStore(val, variable);
+    return val;
+  }
+
+  
   // 二項演算子の両方の引数をllvm::Valueにする。
   Value *L = LHS->codegen();
   Value *R = RHS->codegen();
@@ -89,6 +123,46 @@ Value *BinaryAST::codegen() {
     return Builder.CreateSub(L, R, "subtmp");
   case '*':
     return Builder.CreateMul(L, R, "multmp");
+  case '/':
+    // ref
+    // https://llvm.org/doxygen/Value_8h_source.html#l00245
+    return Builder.CreateUDiv(L, R, "divtmp");
+  case ge:
+    return Builder.CreateICmpUGE(L, R, "ugetmp");
+    /*
+    return Builder.CreateIntCast(
+				 Builder.CreateICmpUGE(L, R, "ugetmp"),
+				 Type::getInt64Ty(Context),
+				 true,
+				 "cast_i1_to_i64");
+    */
+  case le:
+    return Builder.CreateICmpULE(L, R, "uletmp");
+    /*
+    return Builder.CreateIntCast(
+				 Builder.CreateICmpULE(L, R, "uletmp"),
+				 Type::getInt64Ty(Context),
+				 true,
+				 "cast_i1_to_i64");
+    */
+  case '>':
+    return Builder.CreateICmpUGT(L, R, "ugttmp");
+    /*
+    return Builder.CreateIntCast(
+				 Builder.CreateICmpUGT(L, R, "ugttmp"),
+				 Type::getInt64Ty(Context),
+				 true,
+				 "cast_i1_to_i64");
+    */
+  case '<':
+    return Builder.CreateICmpULT(L, R, "ugttmp");
+    /*
+    return Builder.CreateIntCast(
+				 Builder.CreateICmpULT(L, R, "ugttmp"),
+				 Type::getInt64Ty(Context),
+				 true,
+				 "cast_i1_to_i64");
+    */
   default:
     return LogErrorV("invalid binary operator");
   }

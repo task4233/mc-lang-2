@@ -40,7 +40,6 @@ class Lexer {
 	    }
 
 	    // function definition
-	    
 	    if (identifierStr == "def") {
 	      return tok_def;
 	    } else if (identifierStr != "") {
