@@ -135,9 +135,23 @@ Value *BinaryAST::codegen() {
     return Builder.CreateUDiv(L, R, "divtmp");
   case ge:
     return Builder.CreateICmpUGE(L, R, "ugetmp");
+    /*
+    return Builder.CreateIntCast(
+				 Builder.CreateICmpUGE(L, R, "ugetmp"),
+				 Type::getInt64Ty(Context),
+				 true,
+				 "cast_i1_to_i64");
+    */
   case le:
     return Builder.CreateICmpULE(L, R, "uletmp");
-  case '<':
+    /*
+    return Builder.CreateIntCast(
+				 Builder.CreateICmpULE(L, R, "uletmp"),
+				 Type::getInt64Ty(Context),
+				 true,
+				 "cast_i1_to_i64");
+    */
+  case '>':
     return Builder.CreateICmpUGT(L, R, "ugttmp");
     /*
     return Builder.CreateIntCast(
@@ -146,7 +160,7 @@ Value *BinaryAST::codegen() {
 				 true,
 				 "cast_i1_to_i64");
     */
-  case '>':
+  case '<':
     return Builder.CreateICmpULT(L, R, "ugttmp");
     /*
     return Builder.CreateIntCast(
