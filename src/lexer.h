@@ -13,8 +13,7 @@ enum Token {
     tok_eof = -1,
     tok_def = -2,
     tok_identifier = -3,
-    tok_number = -4,
-    tok_cast = -5
+    tok_number = -4
 };
 
 class Lexer {
@@ -41,8 +40,6 @@ class Lexer {
 	    }
 
 	    // function definition
-
-	    // std::cout << "identifierStr:" << identifierStr << std::endl;
 	    if (identifierStr == "def") {
 	      return tok_def;
 	    } else if (identifierStr != "") {

@@ -51,7 +51,6 @@ Value *CallExprAST::codegen() {
   // https://llvm.org/doxygen/classllvm_1_1Module.html
   // Function * Module::getFunction(StringRef Name) const
   // look up the specified function in the module symbol table
-  // std::cout << callee << std::endl;
   auto calleeFuncPtr = myModule->getFunction(callee);
   if (calleeFuncPtr == nullptr) {
     return LogErrorV("NullPtr in CallExprAST codegen\n");
@@ -127,11 +126,6 @@ Value *BinaryAST::codegen() {
   case '/':
     // ref
     // https://llvm.org/doxygen/Value_8h_source.html#l00245
-
-    /*
-    std::cout << (L->getType())->getTypeID() << std::endl;
-    std::cout << (R->getType())->getTypeID() << std::endl;
-    */
     return Builder.CreateUDiv(L, R, "divtmp");
   case ge:
     return Builder.CreateICmpUGE(L, R, "ugetmp");
